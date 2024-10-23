@@ -1,9 +1,11 @@
 package org.konoechoda.server.impl;
 
 import io.vertx.core.Vertx;
+import lombok.extern.slf4j.Slf4j;
 import org.konoechoda.server.HttpServer;
 import org.konoechoda.server.HttpServerHandler;
 
+@Slf4j
 public class VertxHttpServerImpl implements HttpServer {
 
     @Override
@@ -25,11 +27,9 @@ public class VertxHttpServerImpl implements HttpServer {
         // 监听端口
         server.listen(port, res -> {
             if (res.succeeded()) {
-                // TODO 日志记录
-                System.out.println("Server started on port: " + port);
+                log.info("Server started on port: {}", port);
             } else {
-                // TODO 日志记录
-                System.out.println("Failed to bind: " + res.cause().getMessage());
+                log.error("Failed to bind: {}", res.cause().getMessage());
             }
         });
     }
