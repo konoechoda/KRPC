@@ -9,15 +9,16 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
+        <module>Common</module>
         <module>Consumer</module>
         <module>Provider</module>
-        <module>Provider-Common</module>
-        <module>rpc</module>
+        <module>RPCS</module>
     </modules>
 
+
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
     </properties>
     
 </project>

@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>org.konoechoda</groupId>
-    <artifactId>Provider</artifactId>
+    <artifactId>Common</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -21,8 +21,9 @@
     <dependencies>
         <dependency>
             <groupId>org.konoechoda</groupId>
-            <artifactId>Common</artifactId>
+            <artifactId>RPCS</artifactId>
             <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
