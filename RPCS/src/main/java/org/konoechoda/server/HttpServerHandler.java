@@ -4,11 +4,13 @@ import io.vertx.core.Handler;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
+import org.konoechoda.RpcApplication;
 import org.konoechoda.model.RpcRequest;
 import org.konoechoda.model.RpcResponse;
 import org.konoechoda.register.LocalRegister;
 import org.konoechoda.serializer.Serializer;
-import org.konoechoda.serializer.impl.jdkSerializer;
+import org.konoechoda.serializer.SerializerFactory;
+
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -17,7 +19,7 @@ public class HttpServerHandler implements Handler<HttpServerRequest> {
     @Override
     public void handle(HttpServerRequest httpServerRequest) {
         // 指定序列化器
-        final Serializer serializer = new jdkSerializer();
+        final Serializer serializer = SerializerFactory.getSerializer(RpcApplication.getRpcConfig().getSerializer());
         // TODO 日志记录
         System.out.println("Received: " + httpServerRequest.method() + " " + httpServerRequest.uri());
         httpServerRequest.bodyHandler(body -> {

@@ -2,10 +2,12 @@ package org.konoechoda.proxy;
 
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
+import org.konoechoda.RpcApplication;
 import org.konoechoda.model.RpcRequest;
 import org.konoechoda.model.RpcResponse;
 import org.konoechoda.serializer.Serializer;
-import org.konoechoda.serializer.impl.jdkSerializer;
+import org.konoechoda.serializer.SerializerFactory;
+import org.konoechoda.serializer.impl.JdkSerializer;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
@@ -19,7 +21,7 @@ public class ServicePoxy implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         // 指定序列化器
-        Serializer serializer = new jdkSerializer();
+        final Serializer serializer = SerializerFactory.getSerializer(RpcApplication.getRpcConfig().getSerializer());
         // 构造请求
         RpcRequest rpcRequest = RpcRequest.builder()
                 .interfaceName(method.getDeclaringClass().getName())

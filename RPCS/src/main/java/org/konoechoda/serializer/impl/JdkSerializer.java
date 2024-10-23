@@ -4,7 +4,7 @@ import org.konoechoda.serializer.Serializer;
 
 import java.io.*;
 
-public class jdkSerializer implements Serializer {
+public class JdkSerializer implements Serializer {
     /**
      * 序列化
      *

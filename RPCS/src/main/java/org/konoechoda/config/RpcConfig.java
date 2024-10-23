@@ -1,6 +1,7 @@
 package org.konoechoda.config;
 
 import lombok.Data;
+import org.konoechoda.serializer.SerializerKey;
 
 /**
  * RPC配置
@@ -17,4 +18,8 @@ public class RpcConfig {
     private Integer port = 10010;
     // 模拟调用
     private Boolean mock = false;
+    // 序列化器
+    private String serializer = SerializerKey.JDK;
+    // 注册中心配置
+    private RegisterConfig register = new RegisterConfig();
 }

@@ -1,0 +1,4 @@
+jdk=org.konoechoda.serializer.JdkSerializer
+json=org.konoechoda.serializer.JsonSerializer
+kryo=org.konoechoda.serializer.KryoSerializer
+hessian=org.konoechoda.serializer.HessianSerializer
