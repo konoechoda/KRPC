@@ -7,10 +7,12 @@ import cn.hutool.json.JSONUtil;
 import io.etcd.jetcd.*;
 import io.etcd.jetcd.options.GetOption;
 import io.etcd.jetcd.options.PutOption;
+import io.etcd.jetcd.watch.WatchEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.konoechoda.config.RegisterConfig;
 import org.konoechoda.model.ServiceMetaInfo;
 import org.konoechoda.register.Register;
+import org.konoechoda.register.RegistryServiceMultiCache;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
@@ -31,6 +33,8 @@ public class EtcdRegistry implements Register {
     private static final String ETCD_ROOT_PATH = "/rpc/";
     // 注册节点 key 集合（用于维护续期）
     private final Set<String> localRegisterNodeKeySet = new HashSet<>();
+    // 注册中心本地缓存
+    private final RegistryServiceMultiCache registryServiceMultiCache = new RegistryServiceMultiCache();
 
     @Override
     public void init(RegisterConfig registerConfig) {
@@ -71,6 +75,11 @@ public class EtcdRegistry implements Register {
 
     @Override
     public List<ServiceMetaInfo> serviceDiscovery(String serviceKey) throws Exception {
+        // 优先从本地缓存中获取服务
+        List<ServiceMetaInfo> cacheServiceMetaInfos = registryServiceMultiCache.readCache(serviceKey);
+        if (cacheServiceMetaInfos != null){
+            return cacheServiceMetaInfos;
+        }
         // 前缀搜索， 结尾加上 /
         String searchPrefix = ETCD_ROOT_PATH + serviceKey + "/";
         try {
@@ -80,9 +89,17 @@ public class EtcdRegistry implements Register {
                     .build();
             // 解析服务器信息
             List<KeyValue> keyValues = kvClient.get(ByteSequence.from(searchPrefix, StandardCharsets.UTF_8), getOption).get().getKvs();
-            return keyValues.stream()
-                    .map(keyValue -> JSONUtil.toBean(keyValue.getValue().toString(), ServiceMetaInfo.class))
+            List<ServiceMetaInfo> serviceMetaInfoList = keyValues.stream()
+                    .map(keyValue -> {
+                        String key = keyValue.getKey().toString(StandardCharsets.UTF_8);
+                        // 监听 key 的变化
+//                        watch(key);
+                        String value = keyValue.getValue().toString(StandardCharsets.UTF_8);
+                        return JSONUtil.toBean(value, ServiceMetaInfo.class);
+                    })
                     .collect(Collectors.toList());
+            registryServiceMultiCache.writeCache(serviceKey, serviceMetaInfoList);
+            return serviceMetaInfoList;
         } catch (Exception e) {
             throw new RuntimeException("fail to get service list", e);
         }
@@ -138,4 +155,6 @@ public class EtcdRegistry implements Register {
         CronUtil.setMatchSecond(true);
         CronUtil.start();
     }
+
+
 }
