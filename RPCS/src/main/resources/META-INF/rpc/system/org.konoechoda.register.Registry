@@ -1,1 +1,2 @@
 etcd = org.konoechoda.register.EtcdRegistry
+zookeeper = org.konoechoda.register.ZookeeperRegistry

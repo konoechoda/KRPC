@@ -47,4 +47,10 @@ public interface Register {
      */
     void heartbeat();
 
+    /**
+     * 监听
+     * @param serviceKey key
+     */
+    void watch(String serviceKey);
+
 }

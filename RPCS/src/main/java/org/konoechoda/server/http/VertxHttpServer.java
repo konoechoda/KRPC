@@ -1,4 +1,4 @@
-package org.konoechoda.server.impl;
+package org.konoechoda.server.http;
 
 import io.vertx.core.Vertx;
 import lombok.extern.slf4j.Slf4j;
@@ -6,7 +6,7 @@ import org.konoechoda.server.HttpServer;
 import org.konoechoda.server.HttpServerHandler;
 
 @Slf4j
-public class VertxHttpServerImpl implements HttpServer {
+public class VertxHttpServer implements HttpServer {
 
     @Override
     public void start(int port) {

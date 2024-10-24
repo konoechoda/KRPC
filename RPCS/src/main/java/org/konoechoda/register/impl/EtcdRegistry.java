@@ -1,6 +1,7 @@
 package org.konoechoda.register.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ConcurrentHashSet;
 import cn.hutool.cron.CronUtil;
 import cn.hutool.cron.task.Task;
 import cn.hutool.json.JSONUtil;
@@ -35,6 +36,8 @@ public class EtcdRegistry implements Register {
     private final Set<String> localRegisterNodeKeySet = new HashSet<>();
     // 注册中心本地缓存
     private final RegistryServiceMultiCache registryServiceMultiCache = new RegistryServiceMultiCache();
+
+    private final Set<String> watchingKeySet = new ConcurrentHashSet<>();
 
     @Override
     public void init(RegisterConfig registerConfig) {
@@ -93,7 +96,7 @@ public class EtcdRegistry implements Register {
                     .map(keyValue -> {
                         String key = keyValue.getKey().toString(StandardCharsets.UTF_8);
                         // 监听 key 的变化
-//                        watch(key);
+                        watch(key);
                         String value = keyValue.getValue().toString(StandardCharsets.UTF_8);
                         return JSONUtil.toBean(value, ServiceMetaInfo.class);
                     })
@@ -154,6 +157,34 @@ public class EtcdRegistry implements Register {
         });
         CronUtil.setMatchSecond(true);
         CronUtil.start();
+    }
+
+    /**
+     * 监听
+     *
+     * @param serviceNodeKey key
+     */
+    @Override
+    public void watch(String serviceNodeKey) {
+        Watch clientWatch = client.getWatchClient();
+        // 开启监听
+        boolean newWatch = watchingKeySet.add(serviceNodeKey);
+        if (newWatch) {
+            clientWatch.watch(ByteSequence.from(serviceNodeKey, StandardCharsets.UTF_8), watchResponse -> {
+                for (WatchEvent event : watchResponse.getEvents()) {
+                    switch (event.getEventType()) {
+                        case DELETE :
+                            // 删除
+                            registryServiceMultiCache.clearCache(serviceNodeKey);
+                            break;
+                        case PUT :
+                            // 更新
+                        default:
+                            break;
+                    }
+                }
+            });
+        }
     }
 
 

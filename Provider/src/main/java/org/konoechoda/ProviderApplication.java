@@ -2,7 +2,8 @@ package org.konoechoda;
 
 import org.konoechoda.register.LocalRegister;
 import org.konoechoda.server.HttpServer;
-import org.konoechoda.server.impl.VertxHttpServerImpl;
+
+import org.konoechoda.server.http.VertxHttpServer;
 import org.konoechoda.service.UserService;
 
 import java.io.IOException;
@@ -12,7 +13,7 @@ public class ProviderApplication {
         // 启动注册服务
         LocalRegister.register(UserService.class.getName(), UserServiceImpl.class);
         // 启动web服务
-        HttpServer httpServer = new VertxHttpServerImpl();
+        HttpServer httpServer = new VertxHttpServer();
         httpServer.start(10010);
     }
 }
