@@ -4,6 +4,7 @@ import io.vertx.core.Handler;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.konoechoda.RpcApplication;
 import org.konoechoda.model.RpcRequest;
 import org.konoechoda.model.RpcResponse;
@@ -15,13 +16,14 @@ import org.konoechoda.serializer.SerializerFactory;
 import java.io.IOException;
 import java.lang.reflect.Method;
 
+@Slf4j
 public class HttpServerHandler implements Handler<HttpServerRequest> {
     @Override
     public void handle(HttpServerRequest httpServerRequest) {
         // 指定序列化器
         final Serializer serializer = SerializerFactory.getSerializer(RpcApplication.getRpcConfig().getSerializer());
-        // TODO 日志记录
-        System.out.println("Received: " + httpServerRequest.method() + " " + httpServerRequest.uri());
+
+        log.info("Received: {} {}", httpServerRequest.method(), httpServerRequest.uri());
         httpServerRequest.bodyHandler(body -> {
             byte[] bytes = body.getBytes();
             RpcRequest rpcRequest = null;
