@@ -22,7 +22,7 @@ public class ServiceProxyFactory {
         return (T) Proxy.newProxyInstance(
                 interfaceClass.getClassLoader(),
                 new Class[]{interfaceClass},
-                new ServicePoxy()
+                new ServiceProxy()
         );
     }
 

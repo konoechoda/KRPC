@@ -14,7 +14,7 @@ import java.io.IOException;
  */
 public class ProtocolMessageDecoder {
 
-    public static ProtocolMessage<?> decoder(Buffer buffer) throws IOException {
+    public static ProtocolMessage<?> decode(Buffer buffer) throws IOException {
         // 分别从指定位置读取 buffer
         ProtocolMessage.Header header = new ProtocolMessage.Header();
         byte magic = buffer.getByte(0);

@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * 动态代理类
  */
-public class ServicePoxy implements InvocationHandler {
+public class ServiceProxy implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
@@ -52,7 +52,6 @@ public class ServicePoxy implements InvocationHandler {
             }
             ServiceMetaInfo serviceMetaInfo = serviceMetaInfos.get(0);
             // 发送请求
-            // ，这里地址被硬编码了（需要使用注册中心和服务发现机制解决）
             try (HttpResponse httpResponse = HttpRequest.post(serviceMetaInfo.getServiceAddress())
                     .body(bodyBytes)
                     .execute()) {

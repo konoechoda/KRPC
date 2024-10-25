@@ -38,7 +38,7 @@ public class ProtocolMessageEncoder {
             throw new RuntimeException("Unsupported serializer");
         }
         // 序列化消息体
-        Serializer serializer = SerializerFactory.getSerializer(serializerEnum.getValue());
+       Serializer serializer = SerializerFactory.getSerializer(serializerEnum.getValue());
         byte[] bodyBytes = serializer.serialize(protocolMessage.getBody());
         // 写入 body 长度和 body
         buffer.appendInt(bodyBytes.length);
