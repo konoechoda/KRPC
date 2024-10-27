@@ -6,6 +6,8 @@ import cn.hutool.http.HttpResponse;
 import org.konoechoda.RpcApplication;
 import org.konoechoda.config.RpcConfig;
 import org.konoechoda.constant.RpcConstant;
+import org.konoechoda.loadbalancer.LoadBalancer;
+import org.konoechoda.loadbalancer.LoadBalancerFactory;
 import org.konoechoda.model.RpcRequest;
 import org.konoechoda.model.RpcResponse;
 import org.konoechoda.model.ServiceMetaInfo;
@@ -18,7 +20,9 @@ import org.konoechoda.serializer.impl.JdkSerializer;
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 动态代理类
@@ -50,7 +54,12 @@ public class ServiceProxy implements InvocationHandler {
             if (CollUtil.isEmpty(serviceMetaInfos)){
                 throw new RuntimeException("service not found");
             }
-            ServiceMetaInfo serviceMetaInfo = serviceMetaInfos.get(0);
+            // 负载均衡
+            LoadBalancer loadBalancer = LoadBalancerFactory.getInstance(rpcConfig.getLoadBalancer());
+            // 选择服务
+            Map<String, Object> requestParams = new HashMap<>();
+            requestParams.put("methodName", rpcRequest.getMethodName());
+            ServiceMetaInfo serviceMetaInfo = loadBalancer.select(requestParams, serviceMetaInfos);
             // 发送请求
             try (HttpResponse httpResponse = HttpRequest.post(serviceMetaInfo.getServiceAddress())
                     .body(bodyBytes)

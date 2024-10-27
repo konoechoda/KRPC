@@ -1,5 +1,6 @@
 package org.konoechoda;
 
+import org.konoechoda.bootstrap.ConsumerBootStrap;
 import org.konoechoda.config.RpcConfig;
 import org.konoechoda.constant.RpcConstant;
 import org.konoechoda.model.User;
@@ -11,18 +12,31 @@ public class ConsumerApplication {
 
     public static void main(String[] args) {
 
-        RpcConfig rpcConfig = ConfigUtils.loadConfig(RpcConfig.class, RpcConstant.RPC_CONFIG_PREFIX);
-        System.out.println(rpcConfig);
+//        RpcConfig rpcConfig = ConfigUtils.loadConfig(RpcConfig.class, RpcConstant.RPC_CONFIG_PREFIX);
+//        System.out.println(rpcConfig);
+//
+//        // 动态代理
+//        UserService userService = ServiceProxyFactory.getProxy(UserService.class);
+//        User user = new User();
+//        user.setName("张三");
+//        User newUser = userService.getUser(user);
+//        if(newUser != null) {
+//            System.out.println("获取用户信息成功：" + newUser.getName());
+//        } else {
+//            System.out.println("获取用户信息失败");
+//        }
 
-        // 动态代理
+        ConsumerBootStrap.init();
+        //动态代理
         UserService userService = ServiceProxyFactory.getProxy(UserService.class);
         User user = new User();
-        user.setName("张三");
+        user.setName("hpq");
+        //调用服务
         User newUser = userService.getUser(user);
-        if(newUser != null) {
-            System.out.println("获取用户信息成功：" + newUser.getName());
-        } else {
-            System.out.println("获取用户信息失败");
+        if (newUser != null){
+            System.out.println("用户名："+newUser.getName());
+        }else{
+            System.out.println("用户不存在");
         }
     }
 }

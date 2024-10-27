@@ -1,0 +1,2 @@
+etcd=org.konoechoda.register.impl.EtcdRegistry
+zookeeper=org.konoechoda.register.impl.ZookeeperRegistry

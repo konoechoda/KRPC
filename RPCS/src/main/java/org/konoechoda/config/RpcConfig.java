@@ -1,6 +1,9 @@
 package org.konoechoda.config;
 
 import lombok.Data;
+import org.konoechoda.fault.retry.RetryStrategyKeys;
+import org.konoechoda.fault.tolerant.TolerantStrategyKeys;
+import org.konoechoda.loadbalancer.LoadBalancerKeys;
 import org.konoechoda.serializer.SerializerKey;
 
 /**
@@ -22,4 +25,10 @@ public class RpcConfig {
     private String serializer = SerializerKey.JDK;
     // 注册中心配置
     private RegisterConfig registerConfig = new RegisterConfig();
+    // 负载均衡器
+    private String loadBalancer = LoadBalancerKeys.ROUND_ROBIN;
+    // 重试策略
+    private String retryStrategy = RetryStrategyKeys.NO;
+    // 容错策略
+    private String tolerantStrategy = TolerantStrategyKeys.FAIL_FAST;
 }

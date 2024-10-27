@@ -1,0 +1,4 @@
+failOver=org.konoechoda.fault.tolerant.impl.FailOverStrategy
+failBack=org.konoechoda.fault.tolerant.impl.FailBackStrategy
+failSafe=org.konoechoda.fault.tolerant.impl.FailSafeStrategy
+failFast=org.konoechoda.fault.tolerant.impl.FailFastStrategy

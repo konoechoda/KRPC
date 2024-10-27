@@ -9,6 +9,12 @@ import io.vertx.core.net.NetSocket;
 import org.konoechoda.RpcApplication;
 import org.konoechoda.config.RpcConfig;
 import org.konoechoda.constant.RpcConstant;
+import org.konoechoda.fault.retry.RetryStrategy;
+import org.konoechoda.fault.retry.RetryStrategyFactory;
+import org.konoechoda.fault.tolerant.TolerantStrategy;
+import org.konoechoda.fault.tolerant.TolerantStrategyFactory;
+import org.konoechoda.loadbalancer.LoadBalancer;
+import org.konoechoda.loadbalancer.LoadBalancerFactory;
 import org.konoechoda.model.RpcRequest;
 import org.konoechoda.model.RpcResponse;
 import org.konoechoda.model.ServiceMetaInfo;
@@ -22,7 +28,9 @@ import org.konoechoda.server.tcp.VertxTcpClient;
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -55,9 +63,25 @@ public class TcpServiceProxy implements InvocationHandler {
             if (CollUtil.isEmpty(serviceMetaInfoList)) {
                 throw new RuntimeException("service not found");
             }
-            ServiceMetaInfo serviceMetaInfo = serviceMetaInfoList.get(0);
-            // 发送TCP请求
-            RpcResponse rpcResponse = VertxTcpClient.doRequest(rpcRequest, serviceMetaInfo);
+            // 负载均衡
+            LoadBalancer loadBalancer = LoadBalancerFactory.getInstance(rpcConfig.getLoadBalancer());
+            // 选择服务
+            Map<String, Object> requestParams = new HashMap<>();
+            requestParams.put("methodName", rpcRequest.getMethodName());
+            ServiceMetaInfo serviceMetaInfo = loadBalancer.select(requestParams, serviceMetaInfoList);
+            // 发送TCP请求, 并启用重试策略
+            RpcResponse rpcResponse;
+            try{
+                RetryStrategy retryStrategy = RetryStrategyFactory.getInstance(rpcConfig.getRetryStrategy());
+                rpcResponse =  retryStrategy.doRetry(() ->
+                        VertxTcpClient.doRequest(rpcRequest, serviceMetaInfo)
+                );
+            }catch (Exception e){
+                // 启用容错策略
+                TolerantStrategy tolerantStrategy = TolerantStrategyFactory.getInstance(rpcConfig.getTolerantStrategy());
+                return tolerantStrategy.doTolerant(null, e);
+            }
+
             return rpcResponse.getData();
 //            Vertx vertx = Vertx.vertx();
 //            NetClient client = vertx.createNetClient();

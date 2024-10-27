@@ -1,0 +1,2 @@
+no=org.konoechoda.fault.retry.impl.NoRetryStrategy
+fixedInterval=org.konoechoda.fault.retry.impl.FixedIntervalRetryStrategy
