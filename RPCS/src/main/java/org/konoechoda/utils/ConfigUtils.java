@@ -10,10 +10,11 @@ public class ConfigUtils {
 
     /**
      * 加载配置对象
-     * @param clazz 配置类
+     *
+     * @param clazz  配置类
      * @param prefix 配置前缀
+     * @param <T>    配置对象类型
      * @return 配置对象
-     * @param <T> 配置对象类型
      */
     public static <T> T loadConfig(Class<T> clazz, String prefix) {
         return loadConfig(clazz, prefix, "");
@@ -21,11 +22,12 @@ public class ConfigUtils {
 
     /**
      * 加载配置对象 - 支持分区环境
-     * @param clazz 配置类
+     *
+     * @param clazz  配置类
      * @param prefix 配置前缀
-     * @param env 环境
+     * @param env    环境
+     * @param <T>    配置对象类型
      * @return 配置对象
-     * @param <T> 配置对象类型
      */
     public static <T> T loadConfig(Class<T> clazz, String prefix, String env) {
         // 构建配置文件名称
