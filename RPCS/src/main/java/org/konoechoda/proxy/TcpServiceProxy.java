@@ -41,7 +41,6 @@ public class TcpServiceProxy implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         // 指定序列化器
-        final Serializer serializer = SerializerFactory.getSerializer(RpcApplication.getRpcConfig().getSerializer());
         String serviceName = method.getDeclaringClass().getName();
         // 构造请求
         RpcRequest rpcRequest = RpcRequest.builder()
@@ -51,9 +50,6 @@ public class TcpServiceProxy implements InvocationHandler {
                 .params(args)
                 .build();
         try {
-            // 序列化
-            byte[] bodyBytes = serializer.serialize(rpcRequest);
-
             RpcConfig rpcConfig = RpcApplication.getRpcConfig();
             Register register = RegisterFactory.getInstance(rpcConfig.getRegisterConfig().getRegistry());
             ServiceMetaInfo metaInfo = new ServiceMetaInfo();
