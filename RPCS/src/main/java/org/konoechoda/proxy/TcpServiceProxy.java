@@ -75,7 +75,10 @@ public class TcpServiceProxy implements InvocationHandler {
             }catch (Exception e){
                 // 启用容错策略
                 TolerantStrategy tolerantStrategy = TolerantStrategyFactory.getInstance(rpcConfig.getTolerantStrategy());
-                return tolerantStrategy.doTolerant(null, e);
+                Map<String, Object> context = new HashMap<>();
+                context.put("methodName", rpcRequest.getMethodName());
+                context.put("reason", e.getMessage());
+                return tolerantStrategy.doTolerant(context, e);
             }
 
             return rpcResponse.getData();

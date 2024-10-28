@@ -11,6 +11,6 @@ import java.util.Map;
 public class FailFastTolerantStrategy implements TolerantStrategy {
     @Override
     public RpcResponse doTolerant(Map<String, Object> context, Exception e) {
-        throw new RuntimeException("Service error: ", e);
+        throw new RuntimeException("Service error: " + context, e);
     }
 }
