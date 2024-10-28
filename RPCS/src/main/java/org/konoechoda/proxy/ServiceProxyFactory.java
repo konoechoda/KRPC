@@ -9,7 +9,7 @@ import java.lang.reflect.Proxy;
  */
 public class ServiceProxyFactory {
     /**
-     * 创建代理对象
+     * 创建代理对象 - http
      * @param interfaceClass 接口
      * @param <T> 泛型
      * @return 代理对象
@@ -23,6 +23,24 @@ public class ServiceProxyFactory {
                 interfaceClass.getClassLoader(),
                 new Class[]{interfaceClass},
                 new ServiceProxy()
+        );
+    }
+
+    /**
+     * 创建代理对象 - tcp
+     * @param interfaceClass 接口
+     * @param <T> 泛型
+     * @return 代理对象
+     */
+    public static <T> T getTcpProxy(Class<T> interfaceClass) {
+        if(RpcApplication.getRpcConfig().getMock()) {
+            return getMockProxy(interfaceClass);
+        }
+
+        return (T) Proxy.newProxyInstance(
+                interfaceClass.getClassLoader(),
+                new Class[]{interfaceClass},
+                new TcpServiceProxy()
         );
     }
 

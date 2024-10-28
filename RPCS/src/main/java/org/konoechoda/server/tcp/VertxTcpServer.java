@@ -46,6 +46,7 @@ public class VertxTcpServer implements HttpServer {
                 log.info("TCP Server started on port {}", port);
             } else {
                 log.error("TCP Server failed to start on port {}: {}", port, res.cause().getMessage());
+                throw new RuntimeException("TCP Server failed to start: " + res.cause().getMessage());
             }
         });
 

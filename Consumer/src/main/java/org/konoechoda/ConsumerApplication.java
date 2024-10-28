@@ -28,7 +28,7 @@ public class ConsumerApplication {
 
         ConsumerBootStrap.init();
         //动态代理
-        UserService userService = ServiceProxyFactory.getProxy(UserService.class);
+        UserService userService = ServiceProxyFactory.getTcpProxy(UserService.class);
         User user = new User();
         user.setName("hpq");
         //调用服务

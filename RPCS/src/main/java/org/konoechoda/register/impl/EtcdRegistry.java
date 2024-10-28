@@ -84,7 +84,8 @@ public class EtcdRegistry implements Register {
             return cacheServiceMetaInfos;
         }
         // 前缀搜索， 结尾加上 /
-        String searchPrefix = ETCD_ROOT_PATH + serviceKey + "/";
+//        String searchPrefix = ETCD_ROOT_PATH + serviceKey + "/";
+        String searchPrefix = ETCD_ROOT_PATH + serviceKey;
         try {
             // 前缀查询
             GetOption getOption = GetOption.builder()

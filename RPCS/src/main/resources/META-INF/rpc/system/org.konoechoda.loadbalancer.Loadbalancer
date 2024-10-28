@@ -1,3 +1,0 @@
-roundRobin=org.konoechoda.loadbalancer.impl.RoundRobinLoadbalancer
-random=org.konoechoda.loadbalancer.impl.RandomLoadbalancer
-consistentHash=org.konoechoda.loadbalancer.impl.ConsistentHashLoadbalancer
