@@ -34,7 +34,7 @@ public class VertxTcpClient {
                 log.error("Failed to connect to server: {}", result.cause().getMessage());
                 return;
             }
-            log.info("Connected to server: {}", serviceMetaInfo.getServiceHost());
+            log.info("Connected to server: {}:{}", serviceMetaInfo.getServiceHost(), serviceMetaInfo.getServicePort());
             NetSocket socket = result.result();
             // 发送数据
             // 构造消息
