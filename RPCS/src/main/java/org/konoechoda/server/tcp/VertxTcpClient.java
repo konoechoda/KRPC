@@ -15,6 +15,7 @@ import org.konoechoda.protocol.*;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Vertx TCP 客户端
@@ -67,7 +68,13 @@ public class VertxTcpClient {
             socket.handler(bufferHandlerWrapper);
 
         });
-        RpcResponse rpcResponse = responseFuture.get();
+        // 阻塞等待响应, 设置超时时间
+        RpcResponse rpcResponse = null;
+        try {
+            rpcResponse = responseFuture.get(3000, java.util.concurrent.TimeUnit.MILLISECONDS);
+        } catch (TimeoutException e) {
+            throw new RuntimeException("Request timeout: " + e.getMessage());
+        }
         netClient.close();
         return rpcResponse;
     }
