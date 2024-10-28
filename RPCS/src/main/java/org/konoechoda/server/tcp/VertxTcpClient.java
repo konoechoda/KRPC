@@ -71,7 +71,7 @@ public class VertxTcpClient {
         // 阻塞等待响应, 设置超时时间
         RpcResponse rpcResponse = null;
         try {
-            rpcResponse = responseFuture.get(3000, java.util.concurrent.TimeUnit.MILLISECONDS);
+            rpcResponse = responseFuture.get(30000, java.util.concurrent.TimeUnit.MILLISECONDS);
         } catch (TimeoutException e) {
             throw new RuntimeException("Request timeout: " + e.getMessage());
         }

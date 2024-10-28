@@ -30,16 +30,17 @@ public class VertxTcpServer implements HttpServer {
         // 创建 TCP 服务
         NetServer server = vertx.createNetServer();
         // 处理请求
-        server.connectHandler(socket -> {
-            // 接收数据
-            socket.handler(buffer -> {
-                byte[] request = buffer.getBytes();
-                // 处理请求
-                byte[] response = handlerRequest(request);
-                // 响应数据
-                socket.write(Buffer.buffer(response));
-            });
-        });
+        server.connectHandler(new TcpServerHandler());
+//        server.connectHandler(socket -> {
+//            // 接收数据
+//            socket.handler(buffer -> {
+//                byte[] request = buffer.getBytes();
+//                // 处理请求
+//                byte[] response = handlerRequest(request);
+//                // 响应数据
+//                socket.write(Buffer.buffer(response));
+//            });
+//        });
         // 监听端口
         server.listen(port, res -> {
             if (res.succeeded()) {
