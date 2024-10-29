@@ -55,10 +55,20 @@ public class ZookeeperRegistry implements Register {
 
     @Override
     public void init(RegisterConfig registryConfig) {
+        // 获取地址字符串
+        String address = registryConfig.getAddress();
+
+        // 去除 "http://" 或 "https://" 前缀 - zookeeper 连接字符串只接受主机名和端口
+        if (address.startsWith("http://")) {
+            address = address.substring(7); // 去除 "http://" 前缀
+        } else if (address.startsWith("https://")) {
+            address = address.substring(8); // 去除 "https://" 前缀
+        }
+
         // 构建 client 实例
         client = CuratorFrameworkFactory
                 .builder()
-                .connectString(registryConfig.getAddress())
+                .connectString(address)
                 .retryPolicy(new ExponentialBackoffRetry(Math.toIntExact(registryConfig.getTimeout()), 3))
                 .build();
 
