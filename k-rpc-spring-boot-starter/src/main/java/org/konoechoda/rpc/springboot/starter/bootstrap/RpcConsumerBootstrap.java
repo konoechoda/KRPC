@@ -1,6 +1,7 @@
 package org.konoechoda.rpc.springboot.starter.bootstrap;
 
 import org.konoechoda.proxy.ServiceProxyFactory;
+import org.konoechoda.rpc.springboot.starter.annotation.EnableRpc;
 import org.konoechoda.rpc.springboot.starter.annotation.RpcReference;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
@@ -31,7 +32,7 @@ public class RpcConsumerBootstrap implements BeanPostProcessor {
                     interfaceClass = field.getType();
                 }
                 field.setAccessible(true);
-                Object proxyObject = ServiceProxyFactory.getProxy(interfaceClass);
+                Object proxyObject = ServiceProxyFactory.getTcpProxy(interfaceClass);
                 try {
                     field.set(bean, proxyObject);
                     field.setAccessible(false);
