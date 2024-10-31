@@ -8,9 +8,12 @@ import org.konoechoda.model.ServiceRegisterInfo;
 import org.konoechoda.register.LocalRegister;
 import org.konoechoda.register.Register;
 import org.konoechoda.register.RegisterFactory;
+import org.konoechoda.server.ServiceProtocolKeys;
+import org.konoechoda.server.http.VertxHttpServer;
 import org.konoechoda.server.tcp.VertxTcpServer;
 
 import java.util.List;
+import java.util.Objects;
 
 public class ProviderBootStrap {
 
@@ -37,8 +40,17 @@ public class ProviderBootStrap {
             }
         }
         // 启动服务
-        VertxTcpServer vertxTcpServer = new VertxTcpServer();
-        vertxTcpServer.start(rpcConfig.getPort());
+        startService(rpcConfig);
+    }
+
+    public static void startService(RpcConfig rpcConfig) {
+        if (Objects.equals(rpcConfig.getProtocol(), ServiceProtocolKeys.TCP)) {
+            VertxTcpServer vertxTcpServer = new VertxTcpServer();
+            vertxTcpServer.start(rpcConfig.getPort());
+        }else if(Objects.equals(rpcConfig.getProtocol(), ServiceProtocolKeys.HTTP)){
+            VertxHttpServer vertxHttpServer = new VertxHttpServer();
+            vertxHttpServer.start(rpcConfig.getPort());
+        }
     }
 
 }

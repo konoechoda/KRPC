@@ -2,6 +2,7 @@ package org.konoechoda.rpc.springboot.starter.bootstrap;
 
 import lombok.extern.slf4j.Slf4j;
 import org.konoechoda.RpcApplication;
+import org.konoechoda.bootstrap.ProviderBootStrap;
 import org.konoechoda.config.RpcConfig;
 import org.konoechoda.rpc.springboot.starter.annotation.EnableRpc;
 import org.konoechoda.server.tcp.VertxTcpServer;
@@ -30,8 +31,7 @@ public class RpcInitBootstrap implements ImportBeanDefinitionRegistrar {
         final RpcConfig rpcConfig = RpcApplication.getRpcConfig();
         //启动服务器
         if (needServer) {
-            VertxTcpServer tcpServer = new VertxTcpServer();
-            tcpServer.start(rpcConfig.getPort());
+            ProviderBootStrap.startService(rpcConfig);
         }else{
             log.info("RPC Server is not started");
         }

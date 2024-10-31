@@ -5,6 +5,7 @@ import org.konoechoda.fault.retry.RetryStrategyKeys;
 import org.konoechoda.fault.tolerant.TolerantStrategyKeys;
 import org.konoechoda.loadbalancer.LoadBalancerKeys;
 import org.konoechoda.serializer.SerializerKey;
+import org.konoechoda.server.ServiceProtocolKeys;
 
 /**
  * RPC配置
@@ -19,6 +20,8 @@ public class RpcConfig {
     private String host = "localhost";
     // 服务器端口
     private Integer port = 10010;
+    // proxy
+    private String protocol = ServiceProtocolKeys.TCP;
     // 模拟调用
     private Boolean mock = false;
     // 序列化器
